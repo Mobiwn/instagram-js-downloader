@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Instagram Profile Downloader</title>
+	<style>
+		.btn {
+		transition: all 0.3s ease ;
+		border-radius: 4px ;
+		border: none ;
+		color:white;
+		width: 150px ;
+		height: 50px;
+		font-size: 16px;
+		font-family:monospace;
+		cursor:pointer ;
+		}
+	.bluebtn {
+		background: #009688;
+	}
+	.bluebtn:hover {
+	background: #26A69A;
+	transition: all 0.3s ease ;
+	}
+	
+	.orangebtn {
+	background: #4CAF50 ;
+	transition: all 0.3s ease ;
+	}
+	.orangebtn:hover {
+	background: #66BB6A  ;
+	transition: all 0.3s ease ;
+	}
+	#instaID {
+	height: 50px ;
+	font-size: 16px ;
+	font-family:monospace ;
+	padding-left: 15px ;
+	transition: all 0.3s ease ;
+	border:solid #B0BEC5 1px ;
+	}
+	#instaID:focus {
+	background:#B3E5FC;
+	transition: all 0.3s ease ;
+	border:solid #90CAF9 1px ;
+	}
+	</style>
+</head>
+<body>
+<h1>Instagram HD profile Downloader</h1>
+<span style="font-size:24px ;">Instagram ID : </span><input type="text" id="instaID">
+<button type="button" onclick="loadDoc()" class="bluebtn btn" id="checkbtn">Check profile</button>
+<br/>
+<p id="statustxt"></p>
+<br/>
+<img id="instagram_image">
+
+<script>
+function loadDoc() {
+  var statustxt = document.getElementById("statustxt");
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 1)
+	  statustxt.innerText = "connection stablished!";
+	else if (this.readyState == 2)
+	  statustxt.innerText = "request send!";
+	else if (this.readyState == 3)
+	  statustxt.innerText = "process request";
+	else if (this.readyState == 4 && this.status == 404)
+	  statustxt.innerText = "the profile dosen't exists. check username again.";
+	else if (this.readyState == 4 && this.status == 0)
+	  statustxt.innerText = "can not connect. check your intenet connection";
+    if (this.readyState == 4 && this.status == 200) {
+	  statustxt.innerText = "image loaded successfuly!"
+      var respond = this.responseText ;
+      var respondobj = JSON.parse(respond);
+      var image_url = (respondobj.graphql.user.profile_pic_url_hd);
+      document.getElementById('instagram_image').src = image_url ;
+    }
+  };
+  var instagramid = document.getElementById('instaID').value;
+  //console.log(instagramid);
+  xhttp.open("GET", 'https://instagram.com/' + instagramid + '/?__a=1', true);
+  xhttp.send();
+}
+document.getElementById('instaID').addEventListener("keyup" , function(event) {
+	if (event.keyCode === 13) {
+		// Cancel the default action, if needed
+		event.preventDefault();
+		// Trigger the button element with a click
+		document.getElementById('checkbtn').click();
+	}
+
+});
+</script>
+
+</body>
+</html>
